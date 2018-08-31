@@ -1,0 +1,15 @@
+{
+  "name": "ballew_blockchain",
+  "version": "1.0.0",
+  "description": "Private blockchain for Udacity ND",
+  "main": "simpleChain.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "Galen Ballew",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "level": "^4.0.0"
+  }
+}

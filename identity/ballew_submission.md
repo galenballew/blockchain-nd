@@ -1,0 +1,5 @@
+non segwit address: 1M2Hr4vvP3NPiRNCy6QNTMW2w9tMTTZuTJ
+
+msg: 1M2Hr4vvP3NPiRNCy6QNTMW2w9tMTTZuTJ: Udacity rocks!
+
+sig: IL/FNXou+EHDcA0q4TDs8Dcoh6RHw0TQWHaJq0YcqLCIbedF3w+5Y7U2o3j+FI6u6zrEmkcYW00yhjRzl43JI68= 
