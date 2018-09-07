@@ -139,5 +139,5 @@ class Blockchain{
 }
 
 // export for testing
-exports.Blockchain = Blockchain;
-exports.Block = Block;
+// exports.Blockchain = Blockchain;
+// exports.Block = Block;
