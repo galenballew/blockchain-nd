@@ -45,6 +45,7 @@ function addDataToLevelDB(value) {
 
 // load blockchain to most recent block
 // returns a Promise with most recent blockheight
+//resolves i-1 so that block height indexing is correct with genesis block height == 0
 function loadBlockchain() {
   return new Promise(function(resolve, reject) {
     let i = 0;

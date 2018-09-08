@@ -33,6 +33,7 @@ class Blockchain{
 		levelDB.loadBlockchain().then((height) => {
 			if (height == 0) {
 				let block = new Block("Genesis");
+				this.chain.push(block);
 				this.addBlock(block);
 				console.log("Creating new blockchain... adding Genesis block...")
 			} else {
@@ -49,7 +50,7 @@ class Blockchain{
   // Add new block
 	addBlock(newBlock){
 		try {
-		    newBlock.height = this.chain.length;
+		    newBlock.height = this.chain.length - 1;
 		    newBlock.time = new Date().getTime().toString().slice(0,-3);
 		    if(newBlock.height > 0){
 		      newBlock.previousBlockHash = this.chain[newBlock.height-1].hash;
@@ -70,8 +71,8 @@ class Blockchain{
 	getBlockHeight(){
 		try {
 			levelDB.loadBlockchain().then((height) => {
-				console.log("Block height: " + height);
-				return height;
+				console.log("Block height: " + (height-1));
+				return (height-1);
 			});
 		} catch (err) {
 			console.log("Error loading block height: " + err);
