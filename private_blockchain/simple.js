@@ -33,7 +33,7 @@ class Blockchain{
 		levelDB.loadBlockchain().then((height) => {
 			if (height == 0) {
 				let block = new Block("Genesis");
-				this.chain.push(block);
+				//this.chain.push(block);
 				this.addBlock(block);
 				console.log("Creating new blockchain... adding Genesis block...")
 			} else {
@@ -50,7 +50,7 @@ class Blockchain{
   // Add new block
 	addBlock(newBlock){
 		try {
-		    newBlock.height = this.chain.length - 1;
+		    newBlock.height = this.chain.length;
 		    newBlock.time = new Date().getTime().toString().slice(0,-3);
 		    if(newBlock.height > 0){
 		      newBlock.previousBlockHash = this.chain[newBlock.height-1].hash;
@@ -119,16 +119,21 @@ class Blockchain{
 
 	validateChain(){
 		let errorLog = [];
-   	for (let i = 0; i < this.chain.length-1; i++) {
+   	for (let i = 0; i < this.chain.length; i++) {
+			console.log("Validating block " + i)
    		this.validateBlock(i).then((isBlockValid) => {
      		// validate block
      		if (!isBlockValid)errorLog.push(i);
      		// compare blocks hash
-     		let blockHash = this.chain[i].hash;
-     		let previousHash = this.chain[i+1].previousBlockHash;
-     		if (blockHash!==previousHash) {
-           errorLog.push(i);
-         }
+				// do not check most recent block in the chain because there is
+				// not a block ahead of it with previousBlockHash
+				if (i !== (this.chain.length-1)) {
+					let blockHash = this.chain[i].hash;
+	     		let previousHash = this.chain[i+1].previousBlockHash;
+	     		if (blockHash!==previousHash) {
+	           errorLog.push(i);
+	         }
+				}
        })
      }
      if (errorLog.length>0) {
