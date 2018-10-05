@@ -4,19 +4,7 @@
 
 const SHA256 = require('crypto-js/sha256');
 const  levelDB = require('./levelSandbox');
-
-/* ===== Block Class ==============================
-|  Class with a constructor for block 			   |
-|  ===============================================*/
-class Block{
-	constructor(data){
-     this.hash = "",
-     this.height = 0,
-     this.body = data,
-     this.time = 0,
-     this.previousBlockHash = ""
-    }
-}
+const Block = require('./payload');
 
 
 /* ===== Blockchain Class ==========================
@@ -69,26 +57,22 @@ class Blockchain{
 
 	// Get block height
 	getBlockHeight(){
-		try {
 			levelDB.loadBlockchain().then((height) => {
 				console.log("Block height: " + (height-1));
 				return (height-1);
-			});
-		} catch (err) {
-			console.log("Error loading block height: " + err);
-		}
+			}).catch(function(err) {
+				console.log("Error loading block height: " + err);
+		});
 	}
 
 	// get block
 	getBlock(blockHeight) {
-		try {
-			levelDB.getLevelDBData(blockHeight).then((block) => {
-				console.log(block)
-				return block;
-			});
-		} catch (err) {
+		levelDB.getLevelDBData(blockHeight).then((block) => {
+			console.log(block);
+			return block;
+		}).catch(function(err) {
 			console.log("Error loading block: " + err);
-		}
+		});
 	}
 
 	// validate block
@@ -145,5 +129,4 @@ class Blockchain{
 }
 
 // export for testing
-// exports.Blockchain = Blockchain;
-// exports.Block = Block;
+module.exports = Blockchain;

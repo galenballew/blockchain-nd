@@ -24,38 +24,50 @@ npm install crypto-js --save
 ```
 npm install level --save
 ```
+- Install express with --save flag
+```
+npm install express --save
+```
+## Testing the RESTful API
+The source code is configured to run locally on port 8000. Test the available endpoints and methods using `curl` or another HTTP tool.
 
-## Testing
+Before testing the endpoints, be sure to start the service using `$ node index.js`
 
-To test code:
-1: Open a command prompt or shell terminal after install node.js.
-2: Enter a node session, also known as REPL (Read-Evaluate-Print-Loop).
+*GET*
+- Endpoint: /block/{BLOCK_HEIGHT}
+- Example `curl` command
+  - hello `curl http://localhost:8000/block/0`
+  - returns the gensis block
+
+ *POST*
+ - Endpoint: /block
+ - Example payload: `$'{"body":"THIS IS THE BODY FIELD OF THE BLOCK"}'`
+ - Example `curl` command
+  - `curl -X "POST" "http://localhost:8000/block" -H 'Content-Type: application/json' -d $'{"body":"UDACITY FTW"}`
+
+---
+## Testing the source code
+---
 ```
 node
-```
-3: Copy and paste your code into your node session
-4: Instantiate blockchain with blockchain variable
-```
+.load simple.js
+
 let blockchain = new Blockchain();
-```
-5: Generate 10 blocks using a for loop
-```
+
+//add some blocks
 for (var i = 0; i <= 10; i++) {
   blockchain.addBlock(new Block("test data "+i));
 }
-```
-6: Validate blockchain
-```
+
+// Validate blockchain
 blockchain.validateChain();
-```
-7: Induce errors by changing block data
-```
+
+//Induce errors by changing block data
 let inducedErrorBlocks = [2,4,7];
 for (var i = 0; i < inducedErrorBlocks.length; i++) {
   blockchain.chain[inducedErrorBlocks[i]].data='induced chain error';
 }
-```
-8: Validate blockchain. The chain should now fail with blocks 2,4, and 7.
-```
+
+//expect errors on validation
 blockchain.validateChain();
 ```
