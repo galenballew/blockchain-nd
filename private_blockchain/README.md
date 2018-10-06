@@ -12,6 +12,8 @@ Installing Node and NPM is pretty straightforward using the installer package av
 
 ### Configuring your project
 
+This project uses the **Express.js framework** for its RESTful API. Find out more at [http://expressjs.com/](http://expressjs.com/).
+
 - Use NPM to initialize your project and create package.json to store project dependencies.
 ```
 npm init
