@@ -4,7 +4,7 @@
 
 const SHA256 = require('crypto-js/sha256');
 const db = require('level')('./chaindata');
-const Block = require('./payload');
+const Block = require('./block');
 
 
 /* ===== Blockchain Class ==========================
@@ -12,7 +12,7 @@ const Block = require('./payload');
 |  ================================================*/
 class Blockchain{
 
-	constructor(){
+	constructor() {
 		/* Instantiates Blockchain
 		* If there is nothing in ./chaindata, it adds a Block to the blockchain
 		* input: 
@@ -25,7 +25,7 @@ class Blockchain{
 		});
 	}
 
-	async addBlock(newBlock){
+	async addBlock(newBlock) {
 		/* adds a block to the blockchain
 		* input: Block [Object] (./payload.js)
 		* return: 
@@ -35,15 +35,17 @@ class Blockchain{
 		newBlock.time = new Date().getTime().toString().slice(0, -3);
 
 		if (newBlock.height > 0) {
-			const previousBlock = await this.getBlock(height);
-			newBlock.previousBlockHash = previousBlock.hash;
+			await this.getBlock(height).then((previousBlock) => {
+				previousBlock = JSON.parse(previousBlock);
+				newBlock.previousBlockHash = previousBlock.hash;
+			});
 		}
 
 		newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
 		await this.addBlocktoDB(newBlock.height, JSON.stringify(newBlock));
   }
 
-  async validateBlock(blockHeight){
+  async validateBlock(blockHeight) {
 		/* validates a single block by checking stored hash vs computed hash
 		* input: blockHeight [int]
 		* return: [Boolean]
@@ -61,7 +63,7 @@ class Blockchain{
 		}
 	}
 
-	async validateChain(){
+	async validateChain() {
 		/* validates blockchain by validating all blocks
 		* input: 
 		* return: [Boolean]
@@ -141,7 +143,46 @@ class Blockchain{
 			});
 		});
 	}
+
+	async getBlockByHash(hash) {
+		return new Promise((resolve, reject) => {
+			db.createReadStream().on('data', (data) => {    
+				let block = JSON.parse(data.value);
+				if ((block.hash === hash) && (block.height != 0)) {
+					block.body.star.storyDecoded = new Buffer.from(block.body.star.story, 'hex').toString();
+					resolve(block);
+				} else if  (block.hash === hash) {
+					resolve(block);
+			  	}
+			}).on('error', (error) => {
+				reject(error);
+			}).on('close', () => {
+				reject('Block hash not found in blockchain.');
+			});
+		});
+	}
+	  
+	async getBlocksByAddress(address) {
+		const blocks = []	
+		return new Promise((resolve, reject) => {
+			db.createReadStream().on('data', (data) => {
+				console.log(data.value)
+				let block = JSON.parse(data.value);
+				if ((block.body.address === address) && (block.height > 0)) {
+					block.body.star.storyDecoded = new Buffer.from(block.body.star.story, 'hex').toString();
+					blocks.push(block);
+				}
+			}).on('error', (error) => {
+				reject(error)
+			}).on('close', () => {
+				resolve(blocks)
+			});
+		});
+	}
+
+
 }
+
 
 
 // export for testing

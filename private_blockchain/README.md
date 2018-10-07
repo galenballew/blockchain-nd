@@ -17,18 +17,14 @@ This project uses the **Express.js framework** for its RESTful API. Find out mor
 - Use NPM to initialize your project and create package.json to store project dependencies.
 ```
 npm init
-```
-- Install crypto-js with --save flag to save dependency to our package.json file
-```
+
 npm install crypto-js --save
-```
-- Install level with --save flag
-```
+
 npm install level --save
-```
-- Install express with --save flag
-```
+
 npm install express --save
+
+npm install bitcoinjs-message --save
 ```
 ## Testing the RESTful API
 The source code is configured to run locally on port 8000. Test the available endpoints and methods using `curl` or another HTTP tool.
@@ -41,11 +37,59 @@ Before testing the endpoints, be sure to start the service using `$ node index.j
   - hello `curl http://localhost:8000/block/0`
   - returns the gensis block
 
+- Endpoint: /stars/address:[address]
+- Example `curl` command (you will need to supply a authentic hash)
+```
+curl "http://localhost:8000/stars/address:142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ
+```
+
  *POST*
  - Endpoint: /block
- - Example payload: `$'{"body":"THIS IS THE BODY FIELD OF THE BLOCK"}'`
  - Example `curl` command
-  - `curl -X "POST" "http://localhost:8000/block" -H 'Content-Type: application/json' -d $'{"body":"UDACITY FTW"}`
+```
+curl -X "POST" "http://localhost:8000/block" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "address": "142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ",
+  "star": {
+    "dec": "-26° 29'\'' 24.9",
+    "ra": "16h 29m 1.0s",
+    "story": "Found star using https://www.google.com/sky/"
+  }
+}'
+```
+
+ - Endpoint: /requestValidation
+ - Example `curl` command
+```
+curl -X "POST" "http://localhost:8000/requestValidation" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "address": "142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ"
+}'
+```
+
+ - Endpoint: /message-signature/validate
+ - Example `curl` command
+```
+curl -X "POST" "http://localhost:8000/message-signature/validate" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "address": "142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ",
+  "signature": "H6ZrGrF0Y4rMGBMRT2+hHWGbThTIyhBS0dNKQRov9Yg6GgXcHxtO9GJN4nwD2yNXpnXHTWU9i+qdw5vpsooryLU="
+}'
+```
+
+ - Endpoint: /message-signature/validate
+ - Example `curl` command
+```
+curl -X "POST" "http://localhost:8000/message-signature/validate" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "address": "142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ",
+  "signature": "H6ZrGrF0Y4rMGBMRT2+hHWGbThTIyhBS0dNKQRov9Yg6GgXcHxtO9GJN4nwD2yNXpnXHTWU9i+qdw5vpsooryLU="
+}'
+```
 
 ---
 ## Testing the source code
